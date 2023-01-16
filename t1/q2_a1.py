@@ -21,9 +21,10 @@ def formatNumber(n):
 function_range_0 = 0
 function_range_f = 5
 
-n = 128
+n = 3
+iter_n = n
 ns = np.array([])
-f = 2
+f = 3
 
 Hns = np.array([])
 
@@ -40,9 +41,9 @@ ps = np.array(['-'])
 
 index = 0
 
-while n <= 16384:
+while iter_n <= 177147:
 
-    Hn = (function_range_f - function_range_0) / n
+    Hn = (function_range_f - function_range_0) / iter_n
     t = np.array([])
     y = np.array([])
 
@@ -54,21 +55,21 @@ while n <= 16384:
 
     error = abs(Yk - math.exp(Tk) * math.cos(Tk))
 
-    ns = np.append(ns, n)
+    ns = np.append(ns, iter_n)
     Hns = np.append(Hns, Hn)
     errors = np.append(errors, error)
 
-    if n > 128:
+    if iter_n > n:
         ps = np.append(ps, math.log(errors[index - 1]/error, f))
 
-    n *= f
+    iter_n *= f
     Tk = 0
     Yk = y0
     index += 1
 
 
-f = open('./latex_output.o', "w")
+print("Tabela de Convergência Numérica")
 
 for i in range(0, len(ns)):
-    f.write(str(ns[i]) + " & " + formatNumber(Hns[i]) + " & " + formatNumber(errors[i]) + " & " +  formatNumber(ps[i]) + " \\\\" + "\n")
+    print(str(ns[i]) + " & " + formatNumber(Hns[i]) + " & " + formatNumber(errors[i]) + " & " +  formatNumber(ps[i]) + " \\\\" + "\n")
 
