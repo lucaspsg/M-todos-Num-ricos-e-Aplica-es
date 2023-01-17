@@ -21,12 +21,9 @@ def formatNumber(n):
 function_range_0 = 0
 function_range_f = 5
 
-n = 3
+n = 128
 iter_n = n
-ns = np.array([])
-f = 3
-
-Hns = np.array([])
+f = 2
 
 y0 = 1
 
@@ -36,31 +33,27 @@ Yk = y0
 error = 0
 errors = np.array([])
 
-p = 0
-ps = np.array(['-'])
+p = '-'
 
 index = 0
 
-while iter_n <= 177147:
+print("Tabela de Convergência Numérica")
+
+while iter_n <= 16384:
 
     Hn = (function_range_f - function_range_0) / iter_n
-    t = np.array([])
-    y = np.array([])
 
     while Tk < function_range_f:
-        t = np.append(t, Tk)
-        y = np.append(y, Yk)
         Yk = calculate_Ykp1(Yk, Tk, Hn)
         Tk = Tk + Hn
 
     error = abs(Yk - math.exp(Tk) * math.cos(Tk))
-
-    ns = np.append(ns, iter_n)
-    Hns = np.append(Hns, Hn)
     errors = np.append(errors, error)
 
     if iter_n > n:
-        ps = np.append(ps, math.log(errors[index - 1]/error, f))
+        p = math.log(errors[index - 1]/error, f)
+
+    print(str(iter_n) + " & " + formatNumber(Hn) + " & " + formatNumber(error) + " & " +  formatNumber(p) + " \\\\" + "\n")
 
     iter_n *= f
     Tk = 0
@@ -68,8 +61,5 @@ while iter_n <= 177147:
     index += 1
 
 
-print("Tabela de Convergência Numérica")
 
-for i in range(0, len(ns)):
-    print(str(ns[i]) + " & " + formatNumber(Hns[i]) + " & " + formatNumber(errors[i]) + " & " +  formatNumber(ps[i]) + " \\\\" + "\n")
 
