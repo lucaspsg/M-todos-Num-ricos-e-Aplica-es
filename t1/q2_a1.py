@@ -18,7 +18,7 @@ def calculate_Ykp1(Yk, Tk, Hn):
 # função que formata os números para a tabela de convergẽncia
 def formatNumber(n):
     if n == "-":
-        return "-"
+        return "----------"
     return str("{:.5E}".format(Decimal(n)))
 
 # define o intervalo de partição

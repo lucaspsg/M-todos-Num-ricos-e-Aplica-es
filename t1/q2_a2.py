@@ -43,7 +43,7 @@ def dy(t):
 #formata os números o output da tabela
 def formatNumber(n):
     if n == "-":
-        return "-"
+        return "----------"
     return str("{:.5E}".format(Decimal(n)))
 
 function_range_0 = 0 # começo do intervalo a ser avaliado
@@ -70,7 +70,7 @@ index = 0 # variável auxiliar para acessar o erro na matrizes de erros
 
 print("Tabela de Convergência Numérica")
 
-while iter_n <= 500000: # loop para testar diferentes quantidades de partições
+while iter_n <= 16384: # loop para testar diferentes quantidades de partições
 
     Hn = (function_range_f - function_range_0) / iter_n # dt
 
