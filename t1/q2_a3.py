@@ -30,12 +30,21 @@ def calculate_Pkp1(Pk, m, Hk, b, Hn):
 def calculate_Hkp1(Hk, r, a, Pk, Hn):
     return Hk + Hn * discretization_function_H(Hk, r, a, Pk)
 
+#formata os números o output da tabela
+def formatNumber(n):
+    if n == "-":
+        return "----------"
+    return str("{:.5E}".format(Decimal(n)))
+
 function_range_0 = 0 # começo do intervalo a ser avaliado
 function_range_f = 3 # fim do intervalo a ser avaliado
 
 n = 128 # número inicial de partições do intevalo
+Ns = np.array([]) # array com os Ns
 iter_n = n # variável auxiliar para iterar
 f = 2 # fator multiplicativo de n para cada iteração
+
+Hns = np.array([]) # array com os Hns
 
 H0 = 3 # y(0)
 P0 = 1 # y'(0)
@@ -47,39 +56,62 @@ m = 0.2
 
 Tk = 0 # t = 0
 
-Yks = np.array([H0, P0]) # array com Pk e Hk
+Hs = np.array([]) # array com os Hks
+Ps = np.array([]) # array com os Pks
 
-error = 0 # erro da iteração
-errors = np.array([]) # array com os erros de cada iteração
+error = 0 # variável que guarda o erro de norma euclidiana
+errors = np.array([]) # array com os erros
 
-p = '-' # o valor inicial de p é invalido pois são necessários 2 erros para 
-        # computá-lo
+p = '-'
+ps = np.array(['-'])
 
 index = 0 # variável auxiliar para acessar o erro na matrizes de erros
 
 print("Tabela de Convergência Numérica")
 
-while iter_n <= 128: # loop para testar diferentes quantidades de partições
+while iter_n <= 16384: # loop para testar diferentes quantidades de partições
+    Ns = np.append(Ns, iter_n)
+
+    Hk = H0
+    Pk = P0
 
     Hn = (function_range_f - function_range_0) / iter_n # dt
+    Hns = np.append(Hns, Hn)
 
     while Tk < function_range_f: # enquanto Tk estiver dentro do intervalo
         # calcula Pk+1 e Hk+2 e os atualiza no array de variáveis de estado
-        Hk = calculate_Hkp1(Yks[0], r, a, Yks[1], Hn) 
-        Pk = calculate_Pkp1(Yks[1], m, Yks[0], b, Hn)
-        Yks = [Hk, Pk]
+        Hk = calculate_Hkp1(Hk, r, a, Pk, Hn)
+        Pk = calculate_Pkp1(Pk, m, Hk, b, Hn)
+
+
         # atualiza Tk
         Tk = Tk + Hn
 
-        print("Hk:", Hk, "Pk:", Pk)
+    Hs = np.append(Hs, Hk)
+    Ps = np.append(Ps, Pk)
+
+    if index > 0:
+        # calcula o erro usando a norma euclidiana e a adiciona no array
+        errorHkm1 = -(Hs[-1] - Hs[-2])
+        errorPkm1 = -(Ps[-1] - Ps[-2])
+        error = errorHkm1**2 + errorPkm1**2
+        errors = np.append(errors, math.sqrt(error))
 
     # reseta as variáveis para o próximo loop
     iter_n *= f
     Tk = 0
-    Yks = [H0, P0]
+    Hk = H0
+    Pk = P0
     # atualiza o index
     index += 1
 
 
+for i in range(0, len(Hs) - 2):
+    p = math.log(errors[i]/errors[i+1], f)
+    ps = np.append(ps, p)
 
+errors = np.append(errors, '-')
+ps = np.append(ps, '-')
 
+for i in range(0, len(Hs)):
+    print(str(Ns[i]) + " & " + formatNumber(Hns[i]) + " & " + formatNumber(errors[i]) + " & " +  formatNumber(ps[i]) + " \\\\" + "\n")
