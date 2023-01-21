@@ -23,7 +23,7 @@ def formatNumber(n):
 
 # define o intervalo de partição
 function_range_0 = 0
-function_range_f = 5
+function_range_f = 3
 
 n = 128 # número de partições
 iter_n = n # variável auxiliar de iteração para testar diferentes Ns
