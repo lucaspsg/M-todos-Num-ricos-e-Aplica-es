@@ -1,6 +1,7 @@
 # o problema de solução inicial vai ser y'(t) = y - e^t.sin(t) com y(t0) = 0
 # para esse problema, a solução é y(t) = e^t.cos(t)
 # usaremos o método de Euler para resolvê-lo
+# a solução será avaliada  o intervalo de 0 a 3
 # Yk+1 = Yk + Hn.r(t, y(t)) = Yk + Hn.y' = Yk + Hn.(Yk - e^Tk.sin(Tk))
 import numpy as np
 import math

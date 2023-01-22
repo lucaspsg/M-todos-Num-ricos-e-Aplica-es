@@ -2,10 +2,15 @@
 # Pk' = -Pk.m + Pk.Hk.b
 # H' = Hk.r - a.Hk.Pk
 #
-# a = 0.0005
-# b = 0.1
-# r = 0.04
-# m = 0.2
+# H(0) = 3; P(0) = 1
+#
+# a solução será avaliada  o intervalo de 0 a 3
+#
+# a = 1
+# b = 2
+# r = 3
+# m = 4
+#
 # temos duas variaveis de estado -> Pk' e Hk''
 # isso forma duas equações na forma de Cauchy
 #

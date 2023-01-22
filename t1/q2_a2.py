@@ -1,6 +1,7 @@
 # a equação a ser resolvida é y'' + 4y' - 5y = 14 - 30t; y(0) = 3; y'(0) = 1
 # para esse problema a solução é y(t) = 6t + e^(-5t) + 2
 # usaremos o método de Euler para resolvê-lo
+# a solução será avaliada  o intervalo de 0 a 3
 #
 # temos duas variaveis de estado -> y' e y''
 # y' = y1; y'' = y2
