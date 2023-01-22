@@ -42,7 +42,7 @@ for m in range(1, 4):
     # plotando a função cos de fato
     y = np.cos(y)
 
-    plt.plot(x, y, linestyle=linestyle, label=label)
+    plt.plot(x, y, linestyle=linestyle, label=label, color='k')
     t = 0
 
 plt.xlabel('t')
