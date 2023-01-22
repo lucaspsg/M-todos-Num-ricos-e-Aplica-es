@@ -12,6 +12,7 @@
 # resolveremos usando o Método de Euler
 import numpy as np
 import math
+import matplotlib.pyplot as plt
 from decimal import Decimal
 
 # função de discretização de Pk
@@ -39,7 +40,7 @@ def formatNumber(n):
 function_range_0 = 0 # começo do intervalo a ser avaliado
 function_range_f = 3 # fim do intervalo a ser avaliado
 
-n = 128 # número inicial de partições do intevalo
+n = 16 # número inicial de partições do intevalo
 Ns = np.array([]) # array com os Ns
 iter_n = n # variável auxiliar para iterar
 f = 2 # fator multiplicativo de n para cada iteração
@@ -50,15 +51,18 @@ H0 = 3 # y(0)
 P0 = 1 # y'(0)
 
 Hk = H0
+Hks = np.array([Hk])
 Pk = P0
+Pks = np.array([Pk])
 
 # coeficientes do Lotka-Volterra
-a = 0.0005
-b = 0.1
-r = 0.04
-m = 0.2
+a = 1
+b = 2
+r = 3
+m = 4
 
 Tk = 0 # t = 0
+Tks = np.array([Tk])
 
 Hs = np.array([]) # array com os Hks
 Ps = np.array([]) # array com os Pks
@@ -82,11 +86,14 @@ while iter_n <= 16384: # loop para testar diferentes quantidades de partições
     while Tk < function_range_f: # enquanto Tk estiver dentro do intervalo
         # calcula Pk+1 e Hk+2 e os atualiza no array de variáveis de estado
         Hk = calculate_Hkp1(Hk, r, a, Pk, Hn)
+        Hks = np.append(Hks, Hk)
         Pk = calculate_Pkp1(Pk, m, Hk, b, Hn)
+        Pks = np.append(Pks, Pk)
 
 
         # atualiza Tk
         Tk = Tk + Hn
+        Tks = np.append(Tks, Tk)
 
     # salva os valores de yk no último k
     Hs = np.append(Hs, Hk)
@@ -99,11 +106,37 @@ while iter_n <= 16384: # loop para testar diferentes quantidades de partições
         error = math.sqrt(errorHkm1**2 + errorPkm1**2)
         errors = np.append(errors, error)
 
+    if index < 3:
+        linestyle = ''
+        if index == 0:
+            linestyle = 'solid'
+        elif index == 1:
+            linestyle = 'dashed'
+        else:
+            linestyle = 'dotted'
+
+        plt.figure(0)
+        plt.xlabel('t')
+        plt.ylabel('H(t)')
+        plt.title("Aproximações de H(t)")
+
+        plt.plot(Tks, Hks, linestyle=linestyle, color='k', label = 'n = ' + str(iter_n))
+
+        plt.figure(1)
+        plt.xlabel('t')
+        plt.ylabel("P(t)")
+        plt.title('Aproximações de P(t)')
+
+        plt.plot(Tks, Pks, linestyle=linestyle, color='k', label = 'n = ' + str(iter_n))
+
     # reseta as variáveis para o próximo loop
     iter_n *= f
     Tk = 0
+    Tks = np.array([Tk])
     Hk = H0
+    Hks = np.array([Hk])
     Pk = P0
+    Pks = np.array([Pk])
 
     # atualiza o index
     index += 1
@@ -117,3 +150,9 @@ for i in range(1, len(Hs) - 1):
 #printa a tabela de convergência
 for i in range(0, len(Hs)):
     print(str(Ns[i]) + " & " + formatNumber(Hns[i]) + " & " + formatNumber(errors[i]) + " & " +  formatNumber(ps[i]) + " \\\\" + "\n")
+
+plt.figure(0)
+plt.legend(loc='best')
+plt.figure(1)
+plt.legend(loc='best')
+plt.show()
