@@ -55,7 +55,7 @@ Pk = P0
 # coeficientes do Lotka-Volterra
 a = 0.0005
 b = 0.1
-r = 0.04  
+r = 0.04
 m = 0.2
 
 Tk = 0 # t = 0
@@ -64,10 +64,10 @@ Hs = np.array([]) # array com os Hks
 Ps = np.array([]) # array com os Pks
 
 error = 0 # variável que guarda o erro de norma euclidiana
-errors = np.array([]) # array com os erros
+errors = np.array(['-']) # array com os erros
 
 p = '-' # variável que contém p
-ps = np.array(['-']) # array que contém os diferentes ps
+ps = np.array(['-', '-']) # array que contém os diferentes ps
 
 index = 0 # variável auxiliar para acessar o erro na matrizes de erros
 
@@ -94,10 +94,10 @@ while iter_n <= 16384: # loop para testar diferentes quantidades de partições
 
     if index > 0:
         # calcula o erro usando a norma euclidiana e a adiciona no array
-        errorHkm1 = -(Hs[-1] - Hs[-2])
-        errorPkm1 = -(Ps[-1] - Ps[-2])
-        error = errorHkm1**2 + errorPkm1**2
-        errors = np.append(errors, math.sqrt(error))
+        errorHkm1 = -(Hs[-2] - Hs[-1])
+        errorPkm1 = -(Ps[-2] - Ps[-1])
+        error = math.sqrt(errorHkm1**2 + errorPkm1**2)
+        errors = np.append(errors, error)
 
     # reseta as variáveis para o próximo loop
     iter_n *= f
@@ -110,13 +110,9 @@ while iter_n <= 16384: # loop para testar diferentes quantidades de partições
 
 
 # calcula p agora que temos todos os erros
-for i in range(0, len(Hs) - 2):
-    p = math.log(errors[i]/errors[i+1], f)
+for i in range(1, len(Hs) - 1):
+    p = math.log(float(errors[i])/float(errors[i+1]), f)
     ps = np.append(ps, p)
-
-# coloca '-' nos elementos não calculáveis de ps e errors
-errors = np.append(errors, '-')
-ps = np.append(ps, '-')
 
 #printa a tabela de convergência
 for i in range(0, len(Hs)):
