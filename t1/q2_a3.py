@@ -11,7 +11,7 @@
 # r = 3
 # m = 4
 #
-# temos duas variaveis de estado -> Pk' e Hk''
+# temos duas variaveis de estado -> Pk' e Hk'
 # isso forma duas equações na forma de Cauchy
 #
 # resolveremos usando o Método de Euler

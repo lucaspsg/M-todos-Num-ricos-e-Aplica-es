@@ -4,7 +4,7 @@
 # a solução será avaliada  o intervalo de 0 a 3
 #
 # temos duas variaveis de estado -> y' e y''
-# y' = y1; y'' = y2
+# y = y1; y' = y2
 # isso forma duas equações na forma de Cauchy
 #
 # y1' = y2
