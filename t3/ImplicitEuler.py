@@ -6,39 +6,39 @@ import numpy as np
 
 class ImplicitEulerXY():
 
-    def f(t, y):
-        return np.array([[-t*y[0] - math.exp(-t)*y[1]], [y[0]/math.exp(-t)]])
+    def f(self, t, y):
+        return np.array([-t*y[0] - math.exp(-t)*y[1], y[0]/math.exp(-t)])
 
-    def SAM(t, dt, y):
+    def SAM(self, t, dt, y):
         diff = 10
         i = 0
-        root = y + dt * f(t, y)
+        root = y + dt * self.f(t, y)
         while i < 20 and diff < 0.0001:
             prev_root = root
-            root = dt * f(t + dt, y)
+            root = y + dt * self.f(t + dt, root)
             diff = np.linalg.norm(root - prev_root)
             i += 1
         return root
 
-    def calculate_points(y0, t0, tf, ini_n, end_n, r):
+    def calculate_points(self, y0, t0, tf, ini_n, end_n, r):
         n = ini_n
 
         while n <= end_n:
-            y = np.zeros(n, 2)
+            y = np.zeros((n, 2))
             y[0] = y0
-            t = t0
-            dt = (tf - t0)/n
+            dt = (tf - t0)/(n - 1)
+            t = t0 + dt
             index = 1
 
             while t <= tf:
-                y[index] = SAM(t, dt, y[index])
+                y[index] = self.SAM(t, dt, y[index - 1])
                 t += dt
                 index += 1
 
-            y[index]
 
+            print(y)
+            n *= r
 
 a = ImplicitEulerXY()
 
-a.calculate_points([1, 2], 0, 5, 16, 256, 2)
-
+a.calculate_points([1, 0], 0, 5, 16, 16, 2)
