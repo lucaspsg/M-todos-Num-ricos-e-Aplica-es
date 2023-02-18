@@ -1,13 +1,14 @@
 import math
 import numpy as np
 
-# x = (e^-t).cos(t) -> x' = -t.x -(e^-t).y
+# x = (e^-t).cos(t) -> x' = -e^(-t)(y + cos(t))
 # y = sin(t) -> y' = cos(t) = x/(e^-t)
 
 class ImplicitEulerXY():
 
     def f(self, t, y):
-        return np.array([-t*y[0] - math.exp(-t)*y[1], y[0]/math.exp(-t)])
+        return np.array([-math.exp(-t)*(y[1] + math.cos(t)),
+                         y[0]/math.exp(-t)])
 
     def SAM(self, t, dt, y):
         diff = 10
@@ -41,4 +42,4 @@ class ImplicitEulerXY():
 
 a = ImplicitEulerXY()
 
-a.calculate_points([1, 0], 0, 5, 16, 16, 2)
+a.calculate_points([1, 0], 0, 1, 1024, 1024, 2)
