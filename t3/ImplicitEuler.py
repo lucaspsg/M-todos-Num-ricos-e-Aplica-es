@@ -1,4 +1,5 @@
 import math
+import matplotlib.pyplot as plt
 import numpy as np
 
 # x = (e^-t).cos(t) -> x' = -e^(-t)(y + cos(t))
@@ -26,20 +27,50 @@ class ImplicitEulerXY():
 
         while n <= end_n:
             y = np.zeros((n, 2))
+            t = np.zeros((n,))
             y[0] = y0
-            dt = (tf - t0)/(n - 1)
-            t = t0 + dt
+            t[0] = t0
+            dt = (tf - t0)/n
             index = 1
 
-            while t <= tf:
-                y[index] = self.SAM(t, dt, y[index - 1])
-                t += dt
+            while index < n:
+                t[index] = t[index - 1] + dt
+                y[index] = self.SAM(t[index], dt, y[index - 1])
                 index += 1
 
 
-            print(y)
-            n *= r
+            if n <= 64:
+                linestyle = ''
+                if n == 16:
+                    linestyle = 'solid'
+                elif n == 32:
+                    linestyle = 'dashed'
+                else:
+                    linestyle = 'dotted'
+
+                plt.figure(0)
+                plt.xlabel('t')
+                plt.ylabel("y'(t)")
+                plt.title("Aproximações de x(t) = (e^-t).cos(t)")
+
+                plt.plot(t, y[:, 0], linestyle=linestyle, color='k',
+                         label = 'n = ' + str(n))
+
+                plt.figure(1)
+                plt.xlabel('t')
+                plt.ylabel("y(t)")
+                plt.title('Aproximações de y(t) = sin(t)')
+
+                plt.plot(t, y[:, 1], linestyle=linestyle, color='k',
+                         label = 'n = ' + str(n))
+                n *= r
+                
+        plt.figure(0)
+        plt.legend(loc='best')
+        plt.figure(1)
+        plt.legend(loc='best')
+        plt.show()
 
 a = ImplicitEulerXY()
 
-a.calculate_points([1, 0], 0, 1, 1024, 1024, 2)
+a.calculate_points([1, 0], 0, 3, 16, 64, 2)
