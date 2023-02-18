@@ -25,7 +25,7 @@ class ImplicitEulerXY():
         diff = 10
         i = 0
         root = y + dt * self.f(t, y)
-        while i < 20 and diff < 0.0001:
+        while i < 20 and diff > 0.0001:
             prev_root = root
             root = y + dt * self.f(t + dt, root)
             diff = np.linalg.norm(root - prev_root)
