@@ -47,7 +47,7 @@ class ImplicitEulerXY():
 
             while index < n:
                 t[index] = t[index - 1] + dt
-                y[index] = self.SAM(t[index], dt, y[index - 1])
+                y[index] = self.SAM(t[index - 1], dt, y[index - 1])
                 index += 1
 
             error[iteration] = np.linalg.norm(y[index - 1]

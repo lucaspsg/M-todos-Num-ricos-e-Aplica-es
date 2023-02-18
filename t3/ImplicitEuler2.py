@@ -56,7 +56,7 @@ class ImplicitEulerXY():
 
             while index < iter_n:
                 t[index] = t[index - 1] + iter_dt
-                y[index] = self.SAM(t[index], iter_dt, y[index - 1])
+                y[index] = self.SAM(t[index - 1], iter_dt, y[index - 1])
                 index += 1
 
             n[iteration] = iter_n
