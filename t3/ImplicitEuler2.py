@@ -33,45 +33,48 @@ class ImplicitEulerXY():
         return root
 
     def formatNumber(self, n):
-        if n == "-":
+        if n == -1:
             return "----------"
         return str("{:.5E}".format(Decimal(n)))
 
     def calculate_points(self, y0, t0, tf, ini_n, end_n, r):
         iteration = 0
-        n = ini_n
+        n = np.zeros((int(math.log(end_n/ini_n, r)) + 1))
+        dt = np.zeros((int(math.log(end_n/ini_n, r)) + 1))
         error = np.zeros((int(math.log(end_n/ini_n, r)) + 1))
-        p = "-"
+        p = np.zeros((int(math.log(end_n/ini_n, r)) + 1))
 
-        while n <= end_n:
-            y = np.zeros((n, 2))
-            t = np.zeros((n,))
+        iter_n = ini_n
+        iter_dt = (tf - t0)/iter_n
+
+        while iter_n <= end_n:
+            y = np.zeros((iter_n, 2))
+            t = np.zeros((iter_n,))
             y[0] = y0
             t[0] = t0
-            dt = (tf - t0)/n
             index = 1
 
-            while index < n:
-                t[index] = t[index - 1] + dt
-                y[index] = self.SAM(t[index], dt, y[index - 1])
+            while index < iter_n:
+                t[index] = t[index - 1] + iter_dt
+                y[index] = self.SAM(t[index], iter_dt, y[index - 1])
                 index += 1
 
-            error[iteration] = 5
+            n[iteration] = iter_n
+            dt[iteration] = iter_dt
 
             if iteration > 0:
-                p = math.log(error[iteration - 1]/error[iteration], r)
-
-            print(str(n) + " & " + self.formatNumber(dt) + " & " +
-                  self.formatNumber(error[iteration]) + " & " +
-                  self.formatNumber(p) + " \\\\" + "\n")
+                error[iteration] = np.linalg.norm(y[iteration - 1] -
+                                                  y[iteration])
+            else:
+                error[iteration] = -1
 
             iteration += 1
 
-            if n <= 64:
+            if iter_n <= 64:
                 linestyle = ''
-                if n == 16:
+                if iter_n == 16:
                     linestyle = 'solid'
-                elif n == 32:
+                elif iter_n == 32:
                     linestyle = 'dashed'
                 else:
                     linestyle = 'dotted'
@@ -79,19 +82,31 @@ class ImplicitEulerXY():
                 plt.figure(0)
                 plt.xlabel('t')
                 plt.ylabel("y'(t)")
-                plt.title("Aproximações de x(t) = (e^-t).cos(t)")
+                plt.title("Aproximações de x(t)")
 
                 plt.plot(t, y[:, 0], linestyle=linestyle, color='k',
-                         label = 'n = ' + str(n))
+                         label = 'n = ' + str(iter_n))
 
                 plt.figure(1)
                 plt.xlabel('t')
                 plt.ylabel("y(t)")
-                plt.title('Aproximações de y(t) = sin(t)')
+                plt.title('Aproximações de y(t)')
 
                 plt.plot(t, y[:, 1], linestyle=linestyle, color='k',
-                         label = 'n = ' + str(n))
-            n *= r
+                         label = 'n = ' + str(iter_n))
+            iter_n *= r
+            iter_dt /= r
+
+        for i in range(0, len(n) - 1):
+            if i > 1:
+                p[i] = math.log(float(error[i])/float(error[i+1]), r)
+            else:
+                p[i] = -1
+
+        for i in range(0, len(n) - 1):
+            print(str(n[i]) + " & " + self.formatNumber(dt[i]) + " & " +
+                  self.formatNumber(error[i]) + " & " +  self.formatNumber(p[i]) +
+                  " \\\\" + "\n")
 
         plt.figure(0)
         plt.legend(loc='best')
@@ -101,4 +116,4 @@ class ImplicitEulerXY():
 
 a = ImplicitEulerXY()
 
-a.calculate_points([3, 1], 0, 5, 16, 16384, 2)
+a.calculate_points([3, 1], 0, 30, 16, 16384 * 2, 2)
