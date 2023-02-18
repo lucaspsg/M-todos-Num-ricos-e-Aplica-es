@@ -116,4 +116,4 @@ class ImplicitEulerXY():
 
 a = ImplicitEulerXY()
 
-a.calculate_points([3, 1], 0, 30, 16, 16384 * 2, 2)
+a.calculate_points([3, 1], 0, 5, 16, 16384 * 2, 2)
