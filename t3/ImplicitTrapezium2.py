@@ -11,7 +11,7 @@ import numpy as np
 #
 # a solução será avaliada  o intervalo de 0 a 5
 
-class ImplicitEulerXY():
+class ImplicitTrapeziumXY():
 
     def f(self, t, y):
         a = 0.1
@@ -24,10 +24,12 @@ class ImplicitEulerXY():
     def SAM(self, t, dt, y):
         diff = 10
         i = 0
-        root = y + dt * self.f(t, y)
+        root = y + (dt/2) * (self.f(t, y) + self.f(t + dt, y))
+        #root = y + dt * self.f(t + dt, y)
         while i < 20 and diff > 0.0001:
             prev_root = root
-            root = y + dt * self.f(t + dt, root)
+            root = y + (dt/2) * (self.f(t, y) + self.f(t + dt, root))
+            #root = y + dt * self.f(t + dt, root)
             diff = np.linalg.norm(root - prev_root)
             i += 1
         return root
@@ -43,6 +45,7 @@ class ImplicitEulerXY():
         dt = np.zeros((int(math.log(end_n/ini_n, r)) + 1))
         error = np.zeros((int(math.log(end_n/ini_n, r)) + 1))
         p = np.zeros((int(math.log(end_n/ini_n, r)) + 1))
+        final_y = np.zeros((int(math.log(end_n/ini_n, r)) + 1, 2))
 
         iter_n = ini_n
         iter_dt = (tf - t0)/iter_n
@@ -61,20 +64,21 @@ class ImplicitEulerXY():
 
             n[iteration] = iter_n
             dt[iteration] = iter_dt
+            final_y[iteration] = y[-1]
 
             if iteration > 0:
-                error[iteration] = np.linalg.norm(y[iteration - 1] -
-                                                  y[iteration])
+                error[iteration] = abs(np.linalg.norm(final_y[iteration - 1]) -
+                                   np.linalg.norm(final_y[iteration]))/3
             else:
                 error[iteration] = -1
 
             iteration += 1
 
-            if iter_n <= 64:
+            if iter_n <= 16:
                 linestyle = ''
-                if iter_n == 16:
+                if iter_n == 4:
                     linestyle = 'solid'
-                elif iter_n == 32:
+                elif iter_n == 8:
                     linestyle = 'dashed'
                 else:
                     linestyle = 'dotted'
@@ -114,6 +118,6 @@ class ImplicitEulerXY():
         plt.legend(loc='best')
         plt.show()
 
-a = ImplicitEulerXY()
+a = ImplicitTrapeziumXY()
 
-a.calculate_points([3, 1], 0, 5, 16, 16384 * 2, 2)
+a.calculate_points([3, 1], 0, 5, 4, 16384 * 2, 2)

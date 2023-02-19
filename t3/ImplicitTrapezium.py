@@ -3,25 +3,25 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 
-# x = (e^-t).cos(t) -> x' = -e^(-t)(y + cos(t))
-# y = sin(t) -> y' = cos(t) = x/(e^-t)
+# x = (e^-t).cos(t) -> x' = -e^(-t)(sin(t) - cos(t) + 2*cos(t)) -> x' = -2x - (e^-t) * y
+# y = sin(t) - cos(t) -> y' = 2*cos(t) + sin(t) - cos(t) = 2*x/(e^-t) + y
 
-class ImplicitEulerXY():
+class ImplicitTrapeziumXY():
 
     def f(self, t, y):
-        return np.array([-math.exp(-t)*(y[1] + math.cos(t)),
-                         y[0]/math.exp(-t)])
+        return np.array([-2*y[0] - math.exp(-t)*y[1],
+                         2*y[0]/math.exp(-t) + y[1]])
 
     def solution(self, t):
-        return [math.exp(-t)*math.cos(t), math.sin(t)]
+        return [math.exp(-t)*math.cos(t), math.sin(t) - math.cos(t)]
 
     def SAM(self, t, dt, y):
         diff = 10
         i = 0
-        root = y + dt * self.f(t, y)
-        while i < 20 and diff > 0.0001:
+        root = y + (dt/2) * (self.f(t, y) + self.f(t + dt, y))
+        while i < 10 and diff > 0.0001:
             prev_root = root
-            root = y + dt * self.f(t + dt, root)
+            root = y + (dt/2) * (self.f(t, y) + self.f(t + dt, root))
             diff = np.linalg.norm(root - prev_root)
             i += 1
         return root
@@ -48,6 +48,7 @@ class ImplicitEulerXY():
             while index <= n:
                 t[index] = t[index - 1] + dt
                 y[index] = self.SAM(t[index - 1], dt, y[index - 1])
+                #y[index] = y[index - 1] + dt * self.f(t[index - 1], y[index - 1])
                 index += 1
 
             error[iteration] = np.linalg.norm(y[index - 1]
@@ -62,11 +63,11 @@ class ImplicitEulerXY():
 
             iteration += 1
 
-            if n <= 64:
+            if n <= 16:
                 linestyle = ''
-                if n == 16:
+                if n == 4:
                     linestyle = 'solid'
-                elif n == 32:
+                elif n == 8:
                     linestyle = 'dashed'
                 else:
                     linestyle = 'dotted'
@@ -82,7 +83,7 @@ class ImplicitEulerXY():
                 plt.figure(1)
                 plt.xlabel('t')
                 plt.ylabel("y(t)")
-                plt.title('Aproximações de y(t) = sin(t)')
+                plt.title('Aproximações de y(t) = sin(t) - cos(t)')
 
                 plt.plot(t, y[:, 1], linestyle=linestyle, color='k',
                          label = 'n = ' + str(n))
@@ -94,6 +95,6 @@ class ImplicitEulerXY():
         plt.legend(loc='best')
         plt.show()
 
-a = ImplicitEulerXY()
+a = ImplicitTrapeziumXY()
 
-a.calculate_points([1, 0], 0, 3, 16, 16384, 2)
+a.calculate_points([1, -1], 0, 3, 4, 16384, 2)
