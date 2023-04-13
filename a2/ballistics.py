@@ -75,7 +75,7 @@ class ImplicitTrapezium():
 
     # formata os números para printagem da tabela
     def formatNumber(self, n):
-        if n == "-":
+        if n == -1:
             return "----------"
         return str("{:.5E}".format(Decimal(n)))
 
@@ -191,7 +191,7 @@ class ImplicitTrapezium():
         # calculando os ps ao final de tudo
         for i in range(0, len(n) - 1):
             if i > 1:
-                p[i] = math.log(float(error[i])/float(error[i+1]), r)
+                p[i] = abs(math.log(float(error[i])/float(error[i+1]), r))
             else:
                 p[i] = -1
 
@@ -212,9 +212,10 @@ class ImplicitTrapezium():
         plt.figure(4)
         plt.legend(loc='best')
         plt.show()
-        print(self.interpolate_cubic_spline(y[:,0], y[:,1], 42.5))
+        x = int(input("Escolha uma distancia x para saber o valor de y correspondente "))
+        print(self.interpolate_cubic_spline(y[:,0], y[:,1], x))
 
 
 a = ImplicitTrapezium()
 
-a.calculate_points([0, 1, 50, 0], 0, 1, 4, 16384 * 2, 2)
+a.calculate_points([0, 1, 50, 0], 0, 20, 4, 16384 * 2, 2)
