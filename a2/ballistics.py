@@ -2,7 +2,7 @@ from decimal import Decimal
 import math
 import matplotlib.pyplot as plt
 import numpy as np
-
+from tabulate import tabulate
 # a equação a ser resolvida é da posição de um corpo em um lancamento oblíquo levando em conta a resistência do ar
 # x'' = -(k.x'.sqrt(x'^2+y'^2))/m
 # y'' = -g -(k.y'.sqrt(x'^2 + y'^2))/m
@@ -215,8 +215,23 @@ class ImplicitTrapezium():
         plt.figure(4)
         plt.legend(loc='best')
         plt.show()
-        x = int(input("Escolha uma distancia x para saber o valor de y correspondente "))
-        print(self.interpolate_cubic_spline(y[:,0], y[:,1], x))
+       
+        val1 = []
+        val2 = []
+        i = 0
+        print("Escolha 5 distancias x para saber o valor de y correspondente: ")
+        while i < 5:
+            k = int(input())
+            z = self.interpolate_cubic_spline(y[:,0], y[:,1],k)
+            val1.append(k)
+            val2.append(z)
+            i += 1
+        table = []
+        for j in range(len(val1)):
+            table.append([val1[j], val2[j]])
+
+        print(tabulate(table, headers=['x', 'y']))
+
 
 
 a = ImplicitTrapezium()
