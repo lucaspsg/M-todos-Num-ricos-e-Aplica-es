@@ -169,17 +169,20 @@ class ImplicitTrapezium():
                          label = 'n = ' + str(iter_n))
 
                 plt.figure(3)
-                plt.xlabel("x'")
-                plt.ylabel("y")
-                plt.title("Aproximações de x'(t)")
+                plt.xlabel('t')
+                plt.ylabel(r"$\dot{x}(t)$")
+                plt.title(r"Aproximações de $\dot{x}(t)$")
 
                 plt.plot(y[:, 0], y[:, 2], linestyle=linestyle, color='k',
                          label = 'n = ' + str(iter_n))
 
                 plt.figure(4)
                 plt.xlabel('t')
-                plt.ylabel("y'")
-                plt.title("Aproximações de y'(t)")
+                plt.ylabel(r"$\dot{y}(t)$")
+                plt.title(r"Aproximações de $\dot{y}(t)$")
+
+                plt.plot(t, y[:, 3], linestyle=linestyle, color='k',
+                         label = 'n = ' + str(iter_n))
 
                 plt.plot(t, y[:, 3], linestyle=linestyle, color='k',
                          label = 'n = ' + str(iter_n))
