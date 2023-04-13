@@ -134,7 +134,7 @@ class ImplicitTrapezium():
             iteration += 1
 
             # definindo o estilo de linha pra cada n na plotagem do gráfico
-            if iter_n <= 64:
+            if iter_n <= 16:
                 linestyle = ''
                 if iter_n == 4:
                     linestyle = 'solid'
@@ -146,7 +146,7 @@ class ImplicitTrapezium():
                 # plotagem do gráfico
                 plt.figure(0)
                 plt.xlabel('t')
-                plt.ylabel("y'(t)")
+                plt.ylabel("x(t)")
                 plt.title("Aproximações de x(t)")
 
                 plt.plot(t, y[:, 0], linestyle=linestyle, color='k',
@@ -163,9 +163,25 @@ class ImplicitTrapezium():
                 plt.figure(2)
                 plt.xlabel('x')
                 plt.ylabel("y")
-                plt.title('Aproximações de y(t)')
+                plt.title('Visualização da trajetória')
 
-                plt.plot(y[:, 0], y[:, 1], linestyle=linestyle, color='r',
+                plt.plot(y[:, 0], y[:, 1], linestyle=linestyle, color='k',
+                         label = 'n = ' + str(iter_n))
+
+                plt.figure(3)
+                plt.xlabel("x'")
+                plt.ylabel("y")
+                plt.title("Aproximações de x'(t)")
+
+                plt.plot(y[:, 0], y[:, 2], linestyle=linestyle, color='k',
+                         label = 'n = ' + str(iter_n))
+
+                plt.figure(4)
+                plt.xlabel('t')
+                plt.ylabel("y'")
+                plt.title("Aproximações de y'(t)")
+
+                plt.plot(t, y[:, 3], linestyle=linestyle, color='k',
                          label = 'n = ' + str(iter_n))
 
             iter_n *= r # atualizando n para a próxima iteração
@@ -188,6 +204,12 @@ class ImplicitTrapezium():
         plt.figure(0)
         plt.legend(loc='best')
         plt.figure(1)
+        plt.legend(loc='best')
+        plt.figure(2)
+        plt.legend(loc='best')
+        plt.figure(3)
+        plt.legend(loc='best')
+        plt.figure(4)
         plt.legend(loc='best')
         plt.show()
         print(self.interpolate_cubic_spline(y[:,0], y[:,1], 42.5))
